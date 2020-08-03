@@ -10,7 +10,7 @@ exports.getAddProduct = (req, res) => {
 
 exports.postAddProduct = (req, res) => {
     const { title, imageUrl, description, price } = req.body;
-    const product = new Product(title, price, description, imageUrl);
+    const product = new Product(title, price, description, imageUrl, null, req.user._id);
 
     product.save()
         .then(result => {
@@ -42,7 +42,7 @@ exports.getEditProduct = (req, res) => {
 
 exports.postEditProduct = (req, res) => {
     const { productId, title, imageUrl, description, price } = req.body;
-    const product = new Product(title, price, description, imageUrl, productId);
+    const product = new Product(title, price, description, imageUrl, productId, req.user._id);
     product.save()
         .then(result => {
             res.redirect('/admin/products');
