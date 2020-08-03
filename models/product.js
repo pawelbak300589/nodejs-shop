@@ -46,31 +46,16 @@ class Product {
             })
             .catch(err => console.log(err));
     }
-}
 
-// const Product = sequelize.define('product', {
-//     id: {
-//         type: Sequelize.INTEGER,
-//         autoIncrement: true,
-//         allowNull: false,
-//         primaryKey: true
-//     },
-//     title: {
-//         type: Sequelize.STRING,
-//         allowNull: false,
-//     },
-//     price: {
-//         type: Sequelize.DOUBLE,
-//         allowNull: false,
-//     },
-//     imageUrl: {
-//         type: Sequelize.STRING,
-//         allowNull: false,
-//     },
-//     description: {
-//         type: Sequelize.STRING,
-//         allowNull: false,
-//     }
-// });
+    static deleteById(prodId) {
+        const db = getDb();
+        return db.collection('products')
+            .deleteOne({ _id: new mongodb.ObjectId(prodId) })
+            .then(result => {
+                console.log('Deleted!');
+            })
+            .catch(err => console.log(err));
+    }
+}
 
 module.exports = Product;
