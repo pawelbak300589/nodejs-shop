@@ -19,45 +19,37 @@ exports.postAddProduct = (req, res) => {
         .catch(err => console.log(err));
 };
 
-// exports.getEditProduct = (req, res) => {
-//     const editMode = req.query.edit;
-//     if (!editMode) {
-//         return res.redirect('/');
-//     }
-//     const prodId = req.params.productId;
-//     req.user.getProducts({ where: { id: prodId } })
-//         .then(products => {
-//             const product = products[0];
-//             if (!product) {
-//                 return res.redirect('/');
-//             }
-//             res.render('admin/edit-product', {
-//                 pageTitle: 'Edit Product',
-//                 path: '/admin/edit-product',
-//                 editing: editMode,
-//                 product: product
-//             });
-//         })
-//         .catch(err => console.log(err));
-// };
-//
-// exports.postEditProduct = (req, res) => {
-//     const { productId, title, imageUrl, description, price } = req.body;
-//
-//     Product.findByPk(productId)
-//         .then(product => {
-//             product.title = title;
-//             product.imageUrl = imageUrl;
-//             product.description = description;
-//             product.price = price;
-//             return product.save();
-//         })
-//         .then(result => {
-//             res.redirect('/admin/products');
-//         })
-//         .catch(err => console.log(err));
-// };
-//
+exports.getEditProduct = (req, res) => {
+    const editMode = req.query.edit;
+    if (!editMode) {
+        return res.redirect('/');
+    }
+    const prodId = req.params.productId;
+    Product.findById(prodId)
+        .then(product => {
+            if (!product) {
+                return res.redirect('/');
+            }
+            res.render('admin/edit-product', {
+                pageTitle: 'Edit Product',
+                path: '/admin/edit-product',
+                editing: editMode,
+                product: product
+            });
+        })
+        .catch(err => console.log(err));
+};
+
+exports.postEditProduct = (req, res) => {
+    const { productId, title, imageUrl, description, price } = req.body;
+    const product = new Product(title, price, description, imageUrl, productId);
+    product.save()
+        .then(result => {
+            res.redirect('/admin/products');
+        })
+        .catch(err => console.log(err));
+};
+
 // exports.postDeleteProduct = (req, res) => {
 //     const { productId } = req.body;
 //
