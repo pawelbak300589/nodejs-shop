@@ -87,12 +87,7 @@ class User {
     getOrders() {
         const db = getDb();
         return db.collection('orders')
-            .find({ _id: new mongodb.ObjectId(userId) });
-        // .then(user => {
-        //     console.log(user);
-        //     return user;
-        // })
-        // .catch(err => console.log(err));
+            .find({ 'user._id': new mongodb.ObjectId(this._id) }).toArray();
     }
 
     static findById(userId) {
