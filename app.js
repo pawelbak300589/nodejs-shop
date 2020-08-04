@@ -2,6 +2,7 @@ require('dotenv').config();
 const path = require('path');
 
 const express = require('express');
+const session = require('express-session');
 const mongoose = require('mongoose');
 
 const errorController = require('./controllers/error');
@@ -18,6 +19,7 @@ const authRoutes = require('./routes/auth');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false }));
 
 app.use((req, res, next) => {
     User.findById('5f292239d370c65954e50277')
