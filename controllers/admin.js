@@ -10,7 +10,7 @@ exports.getAddProduct = (req, res) => {
 
 exports.postAddProduct = (req, res) => {
     const { title, imageUrl, description, price } = req.body;
-    const product = new Product(title, price, description, imageUrl, null, req.user._id);
+    const product = new Product({ title, price, description, imageUrl });
 
     product.save()
         .then(result => {
@@ -61,7 +61,7 @@ exports.postDeleteProduct = (req, res) => {
 };
 
 exports.getProducts = (req, res) => {
-    Product.fetchAll()
+    Product.find()
         .then(products => {
             res.render('admin/products', {
                 path: '/admin/products',
