@@ -2,9 +2,9 @@ require('dotenv').config();
 const path = require('path');
 
 const express = require('express');
+const mongoose = require('mongoose');
 
 const errorController = require('./controllers/error');
-const mongoConnect = require('./util/database').mongoConnect;
 const User = require('./models/user');
 
 const app = express();
@@ -32,8 +32,10 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-mongoConnect(() => {
-    app.listen(4000, () => {
-        console.log('Listening on 4000');
-    });
-});
+mongoose.connect(process.env.MONGODB_CLIENT_URL)
+    .then(result => {
+        app.listen(4000, () => {
+            console.log('Listening on 4000');
+        });
+    })
+    .catch(err => console.log(err));
