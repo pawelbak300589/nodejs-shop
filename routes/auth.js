@@ -1,5 +1,5 @@
 const express = require('express');
-const { check, body } = require('express-validator/check');
+const { check, body } = require('express-validator');
 
 const authController = require('../controllers/auth');
 const User = require('../models/user');
@@ -10,7 +10,8 @@ router.get('/login', authController.getLogin);
 
 router.get('/signup', authController.getSignup);
 
-router.post('/login',
+router.post(
+    '/login',
     [
         body('email')
             .isEmail()
@@ -24,21 +25,30 @@ router.post('/login',
     authController.postLogin
 );
 
-router.post('/signup',
+router.post(
+    '/signup',
     [
         check('email')
             .isEmail()
             .withMessage('Please enter a valid email.')
             .custom((value, { req }) => {
-                return User.findOne({ email: value })
-                    .then(userDoc => {
-                        if (userDoc) {
-                            return Promise.reject('E-mail exists already, please pick a different one.');
-                        }
-                    });
+                // if (value === 'test@test.com') {
+                //   throw new Error('This email address if forbidden.');
+                // }
+                // return true;
+                return User.findOne({ email: value }).then(userDoc => {
+                    if (userDoc) {
+                        return Promise.reject(
+                            'E-Mail exists already, please pick a different one.'
+                        );
+                    }
+                });
             })
             .normalizeEmail(),
-        body('password', 'Please enter a password with only numbers and text and at least 5 characters.')
+        body(
+            'password',
+            'Please enter a password with only numbers and text and at least 5 characters.'
+        )
             .isLength({ min: 5 })
             .isAlphanumeric()
             .trim(),
@@ -51,7 +61,8 @@ router.post('/signup',
                 return true;
             })
     ],
-    authController.postSignup);
+    authController.postSignup
+);
 
 router.post('/logout', authController.postLogout);
 

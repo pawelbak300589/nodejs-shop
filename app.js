@@ -24,12 +24,16 @@ const fileStorage = multer.diskStorage({
         cb(null, 'images');
     },
     filename: (req, file, cb) => {
-        cb(null, new Date().toISOString() + '-' + file.originalname);
+        cb(null, new Date().getTime() + '-' + file.originalname);
     },
 });
 
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+    if (
+        file.mimetype === 'image/png' ||
+        file.mimetype === 'image/jpg' ||
+        file.mimetype === 'image/jpeg'
+    ) {
         cb(null, true);
     } else {
         cb(null, false);
@@ -43,11 +47,18 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }));
+app.use(
+    session({
+        secret: 'my secret',
+        resave: false,
+        saveUninitialized: false,
+        store: store
+    })
+);
 app.use(csrfProtection);
 app.use(flash());
 
@@ -91,7 +102,7 @@ app.use((error, req, res, next) => {
     });
 });
 
-mongoose.connect(process.env.MONGODB_CLIENT_URL)
+mongoose.connect(process.env.MONGODB_CLIENT_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(result => {
         app.listen(4000, () => {
             console.log('Listening on 4000');
