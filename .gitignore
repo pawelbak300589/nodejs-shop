@@ -3,3 +3,4 @@
 /.env
 /images/
 /data/invoices/
+access.log
